@@ -5,3 +5,6 @@ Dockerfile
 setup.cfg
 /dist
 /*.egg-info
+.coveralls.yml
+Gemfile
+*.rb
