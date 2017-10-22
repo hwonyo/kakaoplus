@@ -1,7 +1,7 @@
 # FBMQ (Facebook Messenger Platform Python Library)
 [![PyPI](https://img.shields.io/pypi/v/kakaoplus.svg?v=1&maxAge=3601)](https://pypi.python.org/pypi/kakaoplus)
-[![Build Status](https://travis-ci.org/wonyoHwang/kakaoplus.svg?branch=master&v=1)](https://travis-ci.org/wonyoHwang/kakaoplus)
 [![Coverage Status](https://travis-ci.org/HwangWonYo/kakaoplus.svg?branch=master)](https://coveralls.io/github/wonyoHwang/kakaoplus?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/wonyoHwang/kakaoplus/badge.svg?branch=master)](https://coveralls.io/github/wonyoHwang/kakaoplus?branch=master)
 [![PyPI](https://img.shields.io/pypi/l/kakaoplus.svg?v=1&maxAge=2592000)](https://pypi.python.org/pypi/kakaoplus)
 
 Python Handy Webhook Handler For Using KaKao Plus Friend Auto Reply
