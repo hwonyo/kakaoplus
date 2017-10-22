@@ -1,7 +1,7 @@
 import json
 import unittest
-from kakao import template as Template
-from kakao import utils
+from kakaoplus import template as Template
+from kakaoplus import utils
 
 class TemplateTest(unittest.TestCase):
     def test_photo(self):
@@ -44,7 +44,7 @@ class TemplateTest(unittest.TestCase):
         keyboard = Template.Keyboard()
         self.assertEqual('{"type": "text"}', utils.to_json(keyboard))
 
-        keyboard = Template.Keyboard('buttons', ['1', '2', '3'])
+        keyboard = Template.Keyboard(['1', '2', '3'], 'buttons')
         target = {'type': 'buttons',
                   'buttons': ['1', '2', '3']}
         self.assertEqual(json.dumps(target, sort_keys=True), utils.to_json(keyboard))

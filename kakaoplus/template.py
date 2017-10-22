@@ -14,7 +14,7 @@ class MessageButton(object):
 class Message(object):
     def __init__(self, text=None, photo=None, message_button=None):
         if text is None and photo is None and message_button is None:
-            raise ValueError('At least one params is not None')
+            raise ValueError('At least one params is required')
         if not isinstance(text, str) and text is not None:
             raise ValueError('text type must be str')
         if not isinstance(message_button, MessageButton) and message_button is not None:

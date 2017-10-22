@@ -1,8 +1,8 @@
 import json
 import unittest
 
-from kakao import payload as Payload
-from kakao import template as Template
+from kakaoplus import payload as Payload
+from kakaoplus import template as Template
 
 class PayloadTest(unittest.TestCase):
     def test_payload(self):
@@ -11,7 +11,7 @@ class PayloadTest(unittest.TestCase):
         target = {'message': {'text': 'hi', 'message_button': None, 'photo': None}}
         self.assertEqual(json.dumps(target, sort_keys=True), p.to_json())
 
-        keyboard = Template.Keyboard('buttons', ['1', '2', '3'])
+        keyboard = Template.Keyboard(['1', '2', '3'], 'buttons')
         p = Payload.Payload(message, keyboard=keyboard)
         target = {'message': {'text': 'hi', 'message_button': None, 'photo': None},
                   'keyboard': {'type': 'buttons', 'buttons': ['1', '2', '3']}}

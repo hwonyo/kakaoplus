@@ -3,3 +3,5 @@
 *.sh
 Dockerfile
 setup.cfg
+/dist
+/*.egg-info

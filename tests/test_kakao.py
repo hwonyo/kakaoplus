@@ -2,9 +2,9 @@ import json
 import unittest
 import mock
 
-from kakao import kakao as KaKao
-from kakao import payload as Payload
-from kakao import template as Template
+from kakaoplus import kakaoplus as KaKao
+from kakaoplus import payload as Payload
+from kakaoplus import template as Template
 
 class KaKaoTest(unittest.TestCase):
     def setUp(self):
