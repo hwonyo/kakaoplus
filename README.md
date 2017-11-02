@@ -1,4 +1,4 @@
-# FBMQ (Facebook Messenger Platform Python Library)
+# kakaoplus
 [![PyPI](https://img.shields.io/pypi/v/kakaoplus.svg?v=1&maxAge=3601)](https://pypi.python.org/pypi/kakaoplus)
 [![Coverage Status](https://travis-ci.org/HwangWonYo/kakaoplus.svg?branch=master)](https://coveralls.io/github/wonyoHwang/kakaoplus?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/HwangWonYo/kakaoplus/badge.svg?branch=doc)](https://coveralls.io/github/HwangWonYo/kakaoplus?branch=doc)
@@ -6,6 +6,7 @@
 
 Python Handy Webhook Handler For Using KaKao Plus Friend Auto Reply
 
+Inspired By : https://github.com/conbus/fbmq
 # Install
 ```
 pip install kakaoplus
@@ -24,14 +25,10 @@ KaKao = KaKaoAgent()
 
 
 @app.route('/keyboard', methods=['GET'])
+@KaKao.handle_keyboard
 def keyboard_handler():
-    payload = KaKao.Payload(
-        Template.Message("User has just entered."),
-        Template.Keyboard()
-    )
-    res = payload.to_json()
 
-    return res
+    return Template.Keyboard()
 
 
 @app.route('/message', methods=['POST'])
