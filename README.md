@@ -39,7 +39,7 @@ def message_handler():
     return res
 
 
-@KaKao.default_callback
+@KaKao.callback
 def handle_message(req):
     '''
     :param req: kakao.Req
