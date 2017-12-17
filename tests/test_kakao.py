@@ -43,10 +43,5 @@ class KaKaoTest(unittest.TestCase):
             self.assertEqual(req.content, 'hi my name is yo')
             counter2()
             return test_res
-
         res = self.agent.handle_webhook(req2)
         self.assertEquals(1, counter2.call_count)
-
-
-
-

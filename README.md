@@ -19,6 +19,7 @@ Handle kakaotalk plus friend auto_reply
 ```python
 from flask import Flask, request
 from kakao import KaKaoAgent
+from kakao import Template, Payload
 
 app = Flask(__name__)
 KaKao = KaKaoAgent()
