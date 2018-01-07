@@ -9,3 +9,4 @@ setup.cfg
 Gemfile
 *.rb
 .idea
+py2/

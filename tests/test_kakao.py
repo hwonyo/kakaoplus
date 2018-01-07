@@ -18,7 +18,7 @@ class KaKaoTest(unittest.TestCase):
 
         counter = mock.MagicMock()
 
-        @self.agent.callback
+        @self.agent.handle_message
         def default_handler(req):
             self.assertTrue(req.recieved_text)
             self.assertFalse(req.recieved_photo)
@@ -35,7 +35,7 @@ class KaKaoTest(unittest.TestCase):
         req2 = json.dumps({"user_key": "testID", "type": "text", "content": "hi my name is yo"})
         counter2 = mock.MagicMock()
 
-        @self.agent.callback(['(hi).*'])
+        @self.agent.handle_message(['(hi).*'])
         def greeting_test(req):
             self.assertTrue(req.recieved_text)
             self.assertFalse(req.recieved_photo)

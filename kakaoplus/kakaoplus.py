@@ -4,7 +4,7 @@ import re
 
 from .payload import Payload
 from .template import *
-from .utils import to_json, PY3, _byteify
+from .utils import to_json, PY3, _byteify, LOGGER
 
 class Req(object):
     def __init__(self, data):
@@ -35,8 +35,8 @@ class Req(object):
 
 
 class KaKaoAgent(object):
-    _button_callbacks = {}
-    _button_callbacks_key_regex = {}
+    _message_callbacks = {}
+    _message_callbacks_key_regex = {}
     _photo_handler = None
     _default_callback = None
 
@@ -46,9 +46,10 @@ class KaKaoAgent(object):
         if req.recieved_photo:
             matched_callback = self._photo_handler
         elif req.recieved_text:
-            matched_callback = self.get_content_callback(req)
+            matched_callback = self.get_message_callback(req)
         else:
-            raise TypeError('Unknown type %s'%req.message_type)
+            LOGGER.warn('Unknown type %s' % req.message_type)
+            return "ok"
 
         if matched_callback is not None:
             res = matched_callback(req)
@@ -70,31 +71,29 @@ class KaKaoAgent(object):
     '''
     setting regular expressions
     '''
-
-    def callback(self, payloads=None):
-        if hasattr(payloads, '__call__'):
+    def handle_message(self, payloads=None):
+        if callable(payloads):
             self._default_callback = payloads
             return
         def wrapper(func):
             for payload in payloads:
-                self._button_callbacks[payload] = func
-
+                self._message_callbacks[payload] = func
             return func
 
         return wrapper
 
-    def get_content_callback(self, req):
+    def get_message_callback(self, req):
         callback = None
-        for key in self._button_callbacks.keys():
-            if key not in self._button_callbacks_key_regex:
-                self._button_callbacks_key_regex[key] = re.compile(key + '$')
-        for key in self._button_callbacks.keys():
-            if self._button_callbacks_key_regex[key].match(req.content):
-                callback = self._button_callbacks[key]
-                print("matched callback handler %s"%key)
+        for key in self._message_callbacks.keys():
+            if key not in self._message_callbacks_key_regex:
+                self._message_callbacks_key_regex[key] = re.compile(key + '$')
+        for key in self._message_callbacks.keys():
+            if self._message_callbacks_key_regex[key].match(req.content):
+                callback = self._message_callbacks[key]
+                LOGGER.info("matched message handler %s"%key)
                 break
         if callback is None:
-            print("default callback handler")
+            LOGGER.info("default message handler")
             callback = self._default_callback
 
         return callback

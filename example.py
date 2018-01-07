@@ -27,12 +27,8 @@ def message_handler():
     return res
 
 
-@KaKao.callback
+@KaKao.handle_message
 def handle_message(req):
-    '''
-    :param req: kakao.Req
-    :return: Template.Payload
-    '''
     echo_message = req.content
     res = Payload(
         Template.Message(echo_message)
@@ -41,12 +37,8 @@ def handle_message(req):
     return res
 
 
-@KaKao.callback(['hello', 'hi'])
+@KaKao.handle_message(['hello', 'hi'])
 def greeting_callback(req):
-    '''
-    :param req: KaKao.Req
-    :return: Template.Payload
-    '''
     res = Payload(
         Template.Message('Hello friend')
     )
