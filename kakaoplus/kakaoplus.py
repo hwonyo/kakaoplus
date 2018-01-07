@@ -3,7 +3,6 @@ import json
 import re
 
 from .payload import Payload
-from .template import *
 from .utils import to_json, PY3, _byteify, LOGGER
 
 class Req(object):
@@ -90,7 +89,7 @@ class KaKaoAgent(object):
         for key in self._message_callbacks.keys():
             if self._message_callbacks_key_regex[key].match(req.content):
                 callback = self._message_callbacks[key]
-                LOGGER.info("matched message handler %s"%key)
+                LOGGER.info("matched message handler %s" % key)
                 break
         if callback is None:
             LOGGER.info("default message handler")

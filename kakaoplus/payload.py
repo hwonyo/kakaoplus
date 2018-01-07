@@ -11,6 +11,5 @@ class Payload(object):
         if keyboard is not None:
             self.keyboard = keyboard
 
-
     def to_json(self):
         return utils.to_json(self)
