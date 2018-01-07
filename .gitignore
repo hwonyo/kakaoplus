@@ -8,3 +8,4 @@ setup.cfg
 .coveralls.yml
 Gemfile
 *.rb
+.idea
