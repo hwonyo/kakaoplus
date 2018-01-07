@@ -4,14 +4,14 @@ import re
 
 from .payload import Payload
 from .template import *
-from .utils import to_json
+from .utils import to_json, PY3, _byteify
 
 class Req(object):
-    def __init__(self, data=None):
-        if data is None:
-            data = {}
-
-        self.data = data
+    def __init__(self, data):
+        if not PY3:
+            self.data  = json.loads(data, object_hook=_byteify)
+        else:
+            self.data  = json.loads(data)
 
     @property
     def user_key(self):
@@ -23,14 +23,7 @@ class Req(object):
 
     @property
     def content(self):
-        if sys.version_info >= (3, 0):
-            content = self.data.get('content')
-        else:
-            content = self.data.get('content')
-            if isinstance(content, unicode):
-                content = content.encode('utf-8')
-
-        return content
+        return self.data.get('content')
 
     @property
     def recieved_photo(self):
@@ -48,8 +41,7 @@ class KaKaoAgent(object):
     _default_callback = None
 
     def handle_webhook(self, request):
-        data = json.loads(request)
-        req = Req(data)
+        req = Req(request)
 
         if req.recieved_photo:
             matched_callback = self._photo_handler
