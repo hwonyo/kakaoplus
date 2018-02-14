@@ -51,10 +51,10 @@ class PayloadTest(unittest.TestCase):
         self.assertEqual(
             kp,
             {
-                'type': 'buttons',
                 'buttons': [
                     'test1',
                     'test2'
-                ]
+                ],
+                'type': 'buttons'
             }
         )

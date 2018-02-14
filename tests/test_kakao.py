@@ -108,7 +108,7 @@ class KaKaoTest(unittest.TestCase):
                     'test button3'
                 ],
                 "type": "buttons"
-            })
+            }, sort_keys=True)
         )
 
     def test_handle_text_keyboard(self):
