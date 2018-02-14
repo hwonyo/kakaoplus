@@ -54,11 +54,12 @@ class KaKaoAgent(object):
         if matched_callback is not None:
             matched_callback(req, res)
         else:
-            print("There is no matching handler")
+            LOGGER.info("There is no matching handler")
             return "ok"
 
-        # if not isinstance(res, Payload):
-        #     raise ValueError('Return type must be Payload')
+        if not res.message:
+            LOGGER.info('Message Required at least one element')
+            return "ok"
 
         return res.to_json()
 
@@ -73,7 +74,7 @@ class KaKaoAgent(object):
     '''
     decorators
     '''
-    def photo_handler(self, func):
+    def handle_photo(self, func):
         self._photo_handler = func
 
     def handle_keyboard(self, func):
