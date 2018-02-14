@@ -1,24 +1,60 @@
-import json
 import unittest
 
 from kakaoplus import payload as Payload
-from kakaoplus import template as Template
 
 class PayloadTest(unittest.TestCase):
     def test_payload(self):
-        message = Template.Message('hi')
-        p = Payload.Payload(message)
-        target = {'message': {'text': 'hi', 'message_button': None, 'photo': None}}
-        self.assertEqual(json.dumps(target, sort_keys=True), p.to_json())
+        p = Payload.Payload()
+        p.text = 'hi'
+        p.photo = {
+            'url': 'https://photo.src',
+            'width': 640,
+            'height': 480
+        }
+        p.message_button = {
+            'label': 'test',
+            'url': 'test.url'
+        }
+        target = {
+            'message': {
+                'text': 'hi',
+                'photo': {
+                    'url': 'https://photo.src',
+                    'width': 640,
+                    'height': 480
+                },
+                'message_button': {
+                    'label': 'test',
+                    'url': 'test.url'
+                }
+            },
+            'keyboard': {'type': 'text'}}
+        self.assertEqual(target, p)
 
-        keyboard = Template.Keyboard(['1', '2', '3'], 'buttons')
-        p = Payload.Payload(message, keyboard=keyboard)
-        target = {'message': {'text': 'hi', 'message_button': None, 'photo': None},
+        p = Payload.Payload()
+        p.text = 'hi'
+        p.keyboard_buttons = ['1', '2', '3']
+        target = {'message': {'text': 'hi'},
                   'keyboard': {'type': 'buttons', 'buttons': ['1', '2', '3']}}
-        self.assertEqual(json.dumps(target, sort_keys=True), p.to_json())
+        self.assertEqual(target, p)
 
-        with self.assertRaises(ValueError):
-            Payload.Payload("hi")
+    def test_keyboard_payload(self):
+        kp = Payload.KeyboardPayload()
+        self.assertEqual(
+            kp,
+            {
+                'type': 'text'
+            }
+        )
 
-        with self.assertRaises(ValueError):
-            Payload.Payload(Template.Message('hi'), [1, 2, 3])
+        kp.keyboard_buttons = ['test1', 'test2']
+        self.assertEqual(
+            kp,
+            {
+                'type': 'buttons',
+                'buttons': [
+                    'test1',
+                    'test2'
+                ]
+            }
+        )

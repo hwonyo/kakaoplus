@@ -8,12 +8,12 @@ class TemplateTest(unittest.TestCase):
         photo = Template.Photo('http://test.jpg')
         target = {'url': 'http://test.jpg',
                   'width': 640, 'height': 480}
-        self.assertEqual(json.dumps(target, sort_keys=True), utils.to_json(photo))
+        self.assertEqual(target, photo)
 
     def test_message_button(self):
         message_button = Template.MessageButton('LINK', 'http://test.com')
         target = {'label': 'LINK', 'url': 'http://test.com'}
-        self.assertEqual(json.dumps(target, sort_keys=True), utils.to_json(message_button))
+        self.assertEqual(target, message_button)
 
     def test_message(self):
         message = Template.Message(
@@ -26,31 +26,13 @@ class TemplateTest(unittest.TestCase):
             'photo': {'url': 'http://test.jpg', 'width': 640, 'height': 480},
             'message_button': {'label': 'LINK', 'url': 'http://test.com'}
         }
-        self.assertEqual(json.dumps(target, sort_keys=True), utils.to_json(message))
-
-        with self.assertRaises(ValueError):
-            Template.Message()
-
-        with self.assertRaises(ValueError):
-            Template.Message(photo='hi')
-
-        with self.assertRaises(ValueError):
-            Template.Message(message_button='check')
-
-        with self.assertRaises(ValueError):
-            Template.Message(text=1)
+        self.assertEqual(target, message)
 
     def test_keyboard(self):
-        keyboard = Template.Keyboard()
+        keyboard = Template.TextKeyboard()
         self.assertEqual('{"type": "text"}', utils.to_json(keyboard))
 
-        keyboard = Template.Keyboard(['1', '2', '3'], 'buttons')
+        keyboard = Template.ButtonKeyboard(['1', '2', '3'])
         target = {'type': 'buttons',
                   'buttons': ['1', '2', '3']}
-        self.assertEqual(json.dumps(target, sort_keys=True), utils.to_json(keyboard))
-
-        with self.assertRaises(ValueError):
-            Template.Keyboard(type='Text')
-
-        with self.assertRaises(ValueError):
-            Template.Keyboard(type='buttons', buttons='check')
+        self.assertEqual(target, keyboard)
