@@ -2,8 +2,7 @@
 from flask import Flask, request
 
 from kakaoplus import KaKaoAgent
-from kakaoplus import Template
-from kakaoplus import Payload
+
 
 app = Flask(__name__)
 KaKao = KaKaoAgent()
@@ -14,36 +13,31 @@ def app_start():
 
 
 @app.route('/keyboard', methods=['GET'])
-@KaKao.handle_keyboard
 def keyboard_handler():
-
-    return Template.Keyboard()
+    return KaKao.handle_keyboard_webhook()
 
 
 @app.route('/message', methods=['POST'])
 def message_handler():
-    res = KaKao.handle_webhook(request.get_data(as_text=True))
+    req = request.get_data(as_text=True)
 
-    return res
+    return KaKao.handle_webhook(req)
+
+@KaKao.handle_keyboard
+def handle_keywboard(res):
+    res.text = True
 
 
 @KaKao.handle_message
-def handle_message(req):
+def handle_message(req, res):
     echo_message = req.content
-    res = Payload(
-        Template.Message(echo_message)
-    )
 
-    return res
+    res.text = "Echo !!" + echo_message
 
 
 @KaKao.handle_message(['hello', 'hi'])
-def greeting_callback(req):
-    res = Payload(
-        Template.Message('Hello friend')
-    )
-
-    return res
+def greeting_callback(req, res):
+    res.text = 'hello my friend'
 
 
 if __name__ == "__main__":
