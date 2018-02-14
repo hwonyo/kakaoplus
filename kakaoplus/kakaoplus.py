@@ -1,9 +1,8 @@
-import sys
 import json
 import re
 
-from .payload import Payload
-from .utils import to_json, PY3, _byteify, LOGGER
+from .payload import Payload, KeyboardPayload
+from .utils import PY3, _byteify, LOGGER
 
 class Req(object):
     def __init__(self, data):
@@ -34,6 +33,7 @@ class Req(object):
 
 
 class KaKaoAgent(object):
+    _keyboard_callback = None
     _message_callbacks = {}
     _message_callbacks_key_regex = {}
     _photo_handler = None
@@ -41,6 +41,7 @@ class KaKaoAgent(object):
 
     def handle_webhook(self, request):
         req = Req(request)
+        res = Payload()
 
         if req.recieved_photo:
             matched_callback = self._photo_handler
@@ -51,13 +52,21 @@ class KaKaoAgent(object):
             return "ok"
 
         if matched_callback is not None:
-            res = matched_callback(req)
+            matched_callback(req, res)
         else:
             print("There is no matching handler")
             return "ok"
 
-        if not isinstance(res, Payload):
-            raise ValueError('Return type must be Payload')
+        # if not isinstance(res, Payload):
+        #     raise ValueError('Return type must be Payload')
+
+        return res.to_json()
+
+    def handle_keyboard_webhook(self):
+        res = KeyboardPayload()
+
+        if self._keyboard_callback:
+            self._keyboard_callback(res)
 
         return res.to_json()
 
@@ -66,6 +75,9 @@ class KaKaoAgent(object):
     '''
     def photo_handler(self, func):
         self._photo_handler = func
+
+    def handle_keyboard(self, func):
+        self._keyboard_callback = func
 
     '''
     setting regular expressions
@@ -96,10 +108,3 @@ class KaKaoAgent(object):
             callback = self._default_callback
 
         return callback
-
-    def handle_keyboard(self, func):
-        def wrapper(*args, **kwargs):
-            res = func(*args, **kwargs)
-            return to_json(res)
-
-        return wrapper
