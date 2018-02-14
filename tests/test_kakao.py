@@ -1,3 +1,4 @@
+#-*- encoding:utf-8 -*-
 import json
 import unittest
 import mock
@@ -85,7 +86,7 @@ class KaKaoTest(unittest.TestCase):
             json.dumps({
                 'keyboard': {'type': 'text'},
                 'message': {'text': 'Regular Expression start with hi'}
-            })
+            }, sort_keys=True)
         )
 
     def test_handle_keyboard(self):
