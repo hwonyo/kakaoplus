@@ -20,6 +20,10 @@ class KaKaoTest(unittest.TestCase):
             self.assertFalse(req.recieved_photo)
             self.assertEqual(req.user_key, "testID")
             self.assertEqual(req.content, "test")
+            self.assertIsNone(res.text)
+            self.assertIsNone(res.photo)
+            self.assertIsNone(res.message_button)
+            self.assertIsNone(res.keyboard_buttons)
 
             res.text = '귀하의 차량이 성공적으로 등록되었습니다. 축하합니다!'
             res.photo = {
@@ -92,6 +96,7 @@ class KaKaoTest(unittest.TestCase):
     def test_handle_keyboard(self):
         @self.agent.handle_keyboard
         def keyboard_handler(res):
+            self.assertIsNone(res.keyboard_buttons)
             res.keyboard_buttons = [
                 'test button1',
                 'test button2',
@@ -119,3 +124,31 @@ class KaKaoTest(unittest.TestCase):
                 "type": "text"
             })
         )
+
+    def test_photo_handler(self):
+        req = json.dumps({"user_key": "testID", "type": "photo", "content": "image.png"})
+        counter = mock.MagicMock()
+        @self.agent.handle_photo
+        def photo_handler(req, res):
+            self.assertTrue(req.recieved_photo)
+            self.assertFalse(req.recieved_text)
+            self.assertEqual(req.user_key, "testID")
+            self.assertEqual(req.content, "image.png")
+            self.assertIsNone(res.text)
+            self.assertIsNone(res.photo)
+            self.assertIsNone(res.message_button)
+            self.assertIsNone(res.keyboard_buttons)
+            counter()
+
+        res = self.agent.handle_webhook(req)
+        self.assertEqual(res, 'ok')
+
+    def test_no_handler(self):
+        req = json.dumps({"user_key": "testID", "type": "text", "content": "test"})
+        res = self.agent.handle_webhook(req)
+        self.assertEqual(res, "ok")
+
+    def test_no_matching_type(self):
+        req = json.dumps({"user_key": "testID", "type": "unknown"})
+        res = self.agent.handle_webhook(req)
+        self.assertEqual(res, "ok")
