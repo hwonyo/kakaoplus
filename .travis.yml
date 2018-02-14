@@ -11,3 +11,8 @@ install:
 script: nosetests --with-coverage --cover-package=kakaoplus
 after_success:
   coveralls
+
+# safelist
+branches:
+  only:
+  - master
