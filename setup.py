@@ -1,5 +1,5 @@
 # !/usr/bin/python
-from setuptools import setup  ,find_packages
+from setuptools import setup, find_packages
 import kakaoplus
 
 setup_requires = []
