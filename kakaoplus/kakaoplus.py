@@ -90,15 +90,14 @@ class KaKaoAgent(object):
         def wrapper(func):
             for payload in payloads:
                 self._message_callbacks[payload] = func
+                self._message_callbacks_key_regex[payload] = re.compile(payload + '$')
             return func
 
         return wrapper
 
     def get_message_callback(self, req):
         callback = None
-        for key in self._message_callbacks.keys():
-            if key not in self._message_callbacks_key_regex:
-                self._message_callbacks_key_regex[key] = re.compile(key + '$')
+
         for key in self._message_callbacks.keys():
             if self._message_callbacks_key_regex[key].match(req.content):
                 callback = self._message_callbacks[key]
