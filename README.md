@@ -26,7 +26,7 @@ KaKao = KaKaoAgent()
 
 @app.route('/keyboard', methods=['GET'])
 def keyboard_handler():
-    res = KaKao.handle_keyboard_webhook
+    res = KaKao.handle_keyboard_webhook()
 
     return res
 
@@ -52,7 +52,7 @@ def keyboard_handler(res):
     ]
 
 
-@KaKao.callback
+@KaKao.handle_message
 def handle_message(req, res):
     '''
     :param req: request from kakao
@@ -63,7 +63,7 @@ def handle_message(req, res):
     res.text = "Echo Message: " + echo_message
 
 
-@KaKao.callback(['hello', 'hi'])
+@KaKao.handle_message(['hello', 'hi'])
 def greeting_callback(req, res):
     '''
     :param req: request from kakao
