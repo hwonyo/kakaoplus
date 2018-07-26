@@ -1,15 +1,13 @@
 import json
 import re
+from flask import request as flask_request
 
 from .payload import Payload, KeyboardPayload
 from .utils import PY3, _byteify, LOGGER
 
 class Req(object):
     def __init__(self, data):
-        if not PY3:
-            self.data  = json.loads(data, object_hook=_byteify)
-        else:
-            self.data  = json.loads(data)
+        self.data = data
 
     @property
     def user_key(self):
@@ -39,7 +37,46 @@ class KaKaoAgent(object):
     _photo_handler = None
     _default_callback = None
 
-    def handle_webhook(self, request):
+    def __init__(self, app=None, route='/', blueprint=None):
+        self.app = app
+        if route[-1] != '/':
+            route += '/'
+        self._route = route
+
+        if app is not None:
+            self.init_app(app)
+        elif blueprint is not None:
+            self.init_blueprint(blueprint)
+        else:
+            pass
+
+
+    def init_app(self, app):
+        app.kakao = self
+
+        app.add_url_rule(self._route + "keyboard", view_func=self._handle_keyboard_webhook, methods=['GET'])
+        app.add_url_rule(self._route + "message", view_func=self._handle_webhook, methods=['POST'])
+
+
+    def init_blueprint(self, blueprint):
+        blueprint.kakao = self
+
+        blueprint.add_url_rule("/keyboard", view_func=self._handle_keyboard_webhook, methods=['GET'])
+        blueprint.add_url_rule("/message", view_func=self._handle_webhook, methods=['POST'])
+
+
+    def _kakaoplus_req(self):
+        raw_body = flask_request.data
+        if not PY3:
+            kakaoplus_request_payload  = json.loads(raw_body, object_hook=_byteify)
+        else:
+            kakaoplus_request_payload  = json.loads(raw_body)
+
+        return kakaoplus_request_payload
+
+
+    def _handle_webhook(self):
+        request = self._kakaoplus_req()
         req = Req(request)
         res = Payload()
 
@@ -63,7 +100,8 @@ class KaKaoAgent(object):
 
         return res.to_json()
 
-    def handle_keyboard_webhook(self):
+
+    def _handle_keyboard_webhook(self):
         res = KeyboardPayload()
 
         if self._keyboard_callback:
@@ -94,6 +132,7 @@ class KaKaoAgent(object):
             return func
 
         return wrapper
+
 
     def get_message_callback(self, req):
         callback = None
