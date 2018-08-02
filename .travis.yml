@@ -8,6 +8,7 @@ install:
   - pip install nose
   - pip install mock
   - pip install coveralls
+  - pip install flask
 script: nosetests --with-coverage --cover-package=kakaoplus
 after_success:
   coveralls
